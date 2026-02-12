@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Success - Satisfying Clean</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0a0a15 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      backdrop-filter: blur(10px);
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #00ff88, #00ffff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      font-size: 40px;
+    }
+
+    .error-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #ff4444, #ff0088);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      font-size: 40px;
+    }
+
+    .loading-icon {
+      width: 80px;
+      height: 80px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #00ffff;
+      border-radius: 50%;
+      margin: 0 auto 25px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .card h2 {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      color: #aaa;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .info-box {
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    .info-box p {
+      margin: 0;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .info-box .label {
+      color: #00ffff;
+      font-size: 12px;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #00ffff, #00ff88);
+      color: #000;
+      border: none;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      margin-left: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+    }
+
+    #status { display: none; }
+    #status.show { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="logo">SATISFYING CLEAN</h1>
+
+    <div class="card">
+      <div id="loading">
+        <div class="loading-icon"></div>
+        <h2>Processing Login...</h2>
+        <p>Please wait while we connect your TikTok account.</p>
+      </div>
+
+      <div id="success" style="display: none;">
+        <div class="success-icon">✓</div>
+        <h2>Login Successful!</h2>
+        <p>Your TikTok account has been connected successfully.</p>
+        
+        <div class="info-box">
+          <span class="label">Authorization Code</span>
+          <p id="authCode" style="word-break: break-all; font-family: monospace; font-size: 12px;"></p>
+        </div>
+
+        <a href="./upload.html" class="btn">Continue to Upload</a>
+      </div>
+
+      <div id="error" style="display: none;">
+        <div class="error-icon">✕</div>
+        <h2>Login Failed</h2>
+        <p id="errorMsg">Something went wrong. Please try again.</p>
+        <a href="./index.html" class="btn">Try Again</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        code: params.get('code'),
+        state: params.get('state'),
+        error: params.get('error'),
+        error_description: params.get('error_description')
+      };
+    }
+
+    function showSuccess(code) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+      document.getElementById('authCode').textContent = code;
+      
+      // 로컬 스토리지에 저장 (데모용)
+      localStorage.setItem('tiktok_auth_code', code);
+      localStorage.setItem('tiktok_logged_in', 'true');
+    }
+
+    function showError(message) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('errorMsg').textContent = message;
+    }
+
+    // 페이지 로드 시 처리
+    window.onload = function() {
+      const params = getUrlParams();
+      
+      // 잠시 로딩 표시 후 결과 표시
+      setTimeout(() => {
+        if (params.error) {
+          showError(params.error_description || params.error);
+        } else if (params.code) {
+          // state 검증
+          const savedState = sessionStorage.getItem('tiktok_state');
+          if (savedState && params.state !== savedState) {
+            showError('Security validation failed. Please try again.');
+            return;
+          }
+          showSuccess(params.code);
+        } else {
+          showError('No authorization code received.');
+        }
+      }, 1500);
+    };
+  </script>
+</body>
+</html>

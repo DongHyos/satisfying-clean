@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Video - Satisfying Clean</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0a0a15 100%);
+      color: #fff;
+      padding: 20px;
+    }
+
+    .header {
+      max-width: 900px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px 16px;
+      border-radius: 30px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .user-name {
+      font-size: 14px;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: 32px;
+      margin-bottom: 30px;
+    }
+
+    .upload-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .upload-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .upload-area {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 50px 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .upload-area:hover {
+      border-color: #00ffff;
+      background: rgba(0, 255, 255, 0.05);
+    }
+
+    .upload-area.has-file {
+      border-color: #00ff88;
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .upload-text {
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .upload-hint {
+      color: #666;
+      font-size: 13px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #00ffff;
+    }
+
+    .hashtags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .hashtag {
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #00ffff;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: linear-gradient(135deg, #ff0050, #ff00ff);
+      color: #fff;
+      border: none;
+      padding: 16px 28px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(255, 0, 80, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .preview-video {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      background: #000;
+    }
+
+    .file-name {
+      color: #00ff88;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .status-message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+    }
+
+    .status-message.success {
+      display: block;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      color: #00ff88;
+    }
+
+    .status-message.error {
+      display: block;
+      background: rgba(255, 68, 68, 0.1);
+      border: 1px solid rgba(255, 68, 68, 0.3);
+      color: #ff4444;
+    }
+
+    .status-message.loading {
+      display: block;
+      background: rgba(0, 255, 255, 0.1);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      color: #00ffff;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1 class="logo">SATISFYING CLEAN</h1>
+    <div class="user-info">
+      <div class="user-avatar">S</div>
+      <span class="user-name">Connected</span>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2 class="page-title">Upload Video to TikTok</h2>
+
+    <div class="upload-section">
+      <div class="card">
+        <h3>📹 Select Video</h3>
+        
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">☁️</div>
+          <p class="upload-text">Click to upload or drag and drop</p>
+          <p class="upload-hint">MP4, MOV up to 50MB</p>
+          <p class="file-name" id="fileName"></p>
+        </div>
+        <input type="file" id="videoInput" class="file-input" accept="video/mp4,video/quicktime">
+
+        <video id="videoPreview" class="preview-video" controls style="display: none;"></video>
+      </div>
+
+      <div class="card">
+        <h3>📝 Video Details</h3>
+
+        <div class="form-group">
+          <label>Caption</label>
+          <textarea id="caption" placeholder="Write a catchy caption...">Satisfying GPU cleaning ✨ #satisfying #oddlysatisfying #cleaning #gpu #pcbuilding</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Suggested Hashtags</label>
+          <div class="hashtags">
+            <span class="hashtag">#satisfying</span>
+            <span class="hashtag">#oddlysatisfying</span>
+            <span class="hashtag">#asmr</span>
+            <span class="hashtag">#cleaning</span>
+            <span class="hashtag">#gpu</span>
+            <span class="hashtag">#pcbuilding</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Privacy</label>
+          <select id="privacy">
+            <option value="public">Public</option>
+            <option value="friends">Friends Only</option>
+            <option value="private">Private</option>
+          </select>
+        </div>
+
+        <button class="btn" id="uploadBtn" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+          </svg>
+          Upload to TikTok
+        </button>
+
+        <div class="status-message" id="statusMessage"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const uploadArea = document.getElementById('uploadArea');
+    const videoInput = document.getElementById('videoInput');
+    const videoPreview = document.getElementById('videoPreview');
+    const fileName = document.getElementById('fileName');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const statusMessage = document.getElementById('statusMessage');
+
+    // 로그인 확인
+    if (!localStorage.getItem('tiktok_logged_in')) {
+      window.location.href = './index.html';
+    }
+
+    uploadArea.addEventListener('click', () => videoInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#00ffff';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (file) handleFile(file);
+    });
+
+    videoInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleFile(file);
+    });
+
+    function handleFile(file) {
+      if (!file.type.match('video.*')) {
+        alert('Please select a video file');
+        return;
+      }
+
+      fileName.textContent = file.name;
+      uploadArea.classList.add('has-file');
+      
+      const url = URL.createObjectURL(file);
+      videoPreview.src = url;
+      videoPreview.style.display = 'block';
+      
+      uploadBtn.disabled = false;
+    }
+
+    uploadBtn.addEventListener('click', async () => {
+      uploadBtn.disabled = true;
+      statusMessage.className = 'status-message loading';
+      statusMessage.textContent = '⏳ Uploading to TikTok...';
+
+      // 시뮬레이션 (실제로는 백엔드 API 호출 필요)
+      setTimeout(() => {
+        statusMessage.className = 'status-message success';
+        statusMessage.innerHTML = '✅ Video uploaded successfully!<br>Your video is now being processed by TikTok.';
+        uploadBtn.textContent = '✓ Uploaded';
+      }, 3000);
+    });
+
+    // 해시태그 클릭 시 캡션에 추가
+    document.querySelectorAll('.hashtag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        const caption = document.getElementById('caption');
+        const hashtag = tag.textContent;
+        if (!caption.value.includes(hashtag)) {
+          caption.value += ' ' + hashtag;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
